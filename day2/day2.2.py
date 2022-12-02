@@ -1,1 +1,1 @@
-print(sum(1+(o-65-(89-y))%3+3*(y-88)for(o,y)in map(lambda x:map(ord,x.split()),open(0).readlines())))
+print(sum(1+(ord(x[0])+ord(x[2])-154)%3-264+3*ord(x[2])for x in open(0).readlines()))
