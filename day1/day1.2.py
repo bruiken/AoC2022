@@ -1,1 +1,1 @@
-print(sum(sorted(eval('['+open(0).read().replace('\n','+').replace('++',',')+']'))[-3:]))
+print(sum(sorted(eval(open(0).read().replace('\n','+').replace('++',',')))[-3:]))
