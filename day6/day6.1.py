@@ -1,1 +1,1 @@
-print([(l:=open(0).read()),[i+4 for i in range(len(l))if len(set(l[i:i+4]))==4]][1][0])
+print([(l:=input()),[i+4 for i in range(len(l))if len({*l[i:i+4]})>3]][1][0])
