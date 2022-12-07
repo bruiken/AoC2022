@@ -1,38 +1,27 @@
-from collections import defaultdict
-
-current_dir = ['']
-dir_parents = dict()
-sub_dirs = defaultdict(list)
-dir_sizes = defaultdict(int)
-
+cur_sizes = [0]
+depth = 0
+dir_sizes = []
 for line in open(0).readlines()[1:]:
     fst, *args = line.split()
     if fst == '$':
         if args[0] == 'cd':
             if args[1] == '..':
-                current_dir.pop()
+                depth -= 1
+                dir_sizes.append(cur_sizes[-1])
+                cur_sizes[depth] += cur_sizes.pop()
             else:
-                current_dir.append(args[1])
-    elif fst == 'dir':
-        cdir = '/'.join(current_dir)
-        adir = cdir + '/' + args[0]
-        dir_parents[adir] = cdir
-        sub_dirs[cdir].append(adir)
-    else:
-        cdir = '/'.join(current_dir)
-        dir_sizes[cdir] += int(fst)
-        tmp = cdir
-        while tmp in dir_parents:
-            dir_sizes[dir_parents[tmp]] += int(fst)
-            tmp = dir_parents[tmp]
+                depth += 1
+                cur_sizes += [0]
+    elif fst != 'dir':
+        cur_sizes[depth] += int(fst)
+for i in range(len(cur_sizes)-1,-1,-1):
+    dir_sizes.append(cur_sizes[-1])
+    if i > 0:
+        cur_sizes[i-1] += cur_sizes.pop()
 
-
-outer_size = dir_sizes['']
-total_space = 7e7
-unused = total_space - outer_size
-space_needed = 3e7 - unused
-cur_best, rem_dir = total_space, ''
-for d, s in dir_sizes.items():
+space_needed = 3e7 - (7e7 - dir_sizes[-1])
+cur_best, rem_dir = 7e7, ''
+for d, s in enumerate(dir_sizes):
     if s >= space_needed:
         if s - space_needed < cur_best:
             cur_best = s - space_needed

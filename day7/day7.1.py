@@ -1,29 +1,24 @@
-from collections import defaultdict
-
-current_dir = ['']
-dir_parents = dict()
-sub_dirs = defaultdict(list)
-dir_sizes = defaultdict(int)
-
+cur_sizes = [0]
+depth = 0
+res = 0
 for line in open(0).readlines()[1:]:
     fst, *args = line.split()
     if fst == '$':
         if args[0] == 'cd':
             if args[1] == '..':
-                current_dir.pop()
+                depth -= 1
+                if cur_sizes[-1] <= 1e5:
+                    res += cur_sizes[-1]
+                cur_sizes[depth] += cur_sizes.pop()
             else:
-                current_dir.append(args[1])
-    elif fst == 'dir':
-        cdir = '/'.join(current_dir)
-        adir = cdir + '/' + args[0]
-        dir_parents[adir] = cdir
-        sub_dirs[cdir].append(adir)
-    else:
-        cdir = '/'.join(current_dir)
-        dir_sizes[cdir] += int(fst)
-        tmp = cdir
-        while tmp in dir_parents:
-            dir_sizes[dir_parents[tmp]] += int(fst)
-            tmp = dir_parents[tmp]
+                depth += 1
+                cur_sizes += [0]
+    elif fst != 'dir':
+        cur_sizes[depth] += int(fst)
+for i in range(len(cur_sizes)-1,-1,-1):
+    if cur_sizes[i] <= 1e5:
+        res += cur_sizes[i]
+    if i > 0:
+        cur_sizes[i-1] += cur_sizes.pop()
 
-print(sum(filter(lambda x: x <= 1e5, dir_sizes.values())))
+print(res)
