@@ -19,6 +19,8 @@ for l in open(0).read().splitlines():
                     if m_d < b_d:
                         b_d = m_d
                         b_m = (x, y)
+                    if b_d == 1:
+                        break
                 rope[k][0] += b_m[0]
                 rope[k][1] += b_m[1]
         visited.add((*rope[-1],))
