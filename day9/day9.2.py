@@ -10,10 +10,13 @@ for l in open(0).read().splitlines():
         rope[0][1] += m_map[d][1]
         # move tail elements
         for k in range(1, len(rope)):
-            if abs(rope[k-1][0] - rope[k][0]) > 1 or abs(rope[k-1][1] - rope[k][1]) > 1:
-                if abs(rope[k-1][0] - rope[k][0]) > 0:
-                    rope[k][0] = (rope[k][0]+1) if rope[k-1][0] > rope[k][0] else (rope[k][0]-1)
-                if abs(rope[k-1][1] - rope[k][1]) > 0:
-                    rope[k][1] = (rope[k][1]+1) if rope[k-1][1] > rope[k][1] else (rope[k][1]-1)
+            cur_x, cur_y = rope[k]
+            pre_x, pre_y = rope[k-1]
+            dx, dy = abs(pre_x - cur_x), abs(pre_y - cur_y)
+            if dx > 1 or dy > 1:
+                if dx > 0:
+                    rope[k][0] += 1 if pre_x > cur_x else -1
+                if dy > 0:
+                    rope[k][1] += 1 if pre_y > cur_y else -1
         visited.add((*rope[-1],))
 print(len(visited))
