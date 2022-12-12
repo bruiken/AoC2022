@@ -16,14 +16,16 @@ for line_y, line in enumerate(open(0).read().split()):
 WIDTH = len(heights[0])
 HEIGHT = len(heights)
 
-paths = [[(s_x,s_y)]]
+paths = [(s_x, s_y)]
+depth = 0
+visited = {(s_x, s_y)}
+
 while True:
     new_paths = []
-    visited = set()
-    for path in paths:
-        *_, (x, y) = path
+    for coord in paths:
+        x, y = coord
         if x == e_x and y == e_y:
-            print(len(path)-1)
+            print(depth)
             exit(0)
         new_coords = set()
         if x > 0:
@@ -36,11 +38,12 @@ while True:
             new_coords.add((x, y+1))
         cur_height = heights[y][x]
         for coord in new_coords:
-            if coord not in visited and coord not in path:
+            if coord not in visited:
                 if heights[coord[1]][coord[0]] - cur_height <= 1:
                     visited.add(coord)
-                    new_paths.append(list(path) + [coord])
+                    new_paths.append(coord)
         if len(paths) == 0:
             print('no path found!')
             break
     paths = new_paths
+    depth += 1
