@@ -25,26 +25,16 @@ for line in open(0).read().splitlines():
             solids.add((x, y))
         p_x, p_y = eval(coord)
 
-for x in range(-1000, 1000):
-    solids.add((x, greatest_y + 2))
+sand_drops = 1
+queue = [(500, 0)]
+while queue:
+    x, y = queue.pop()
+    if y < greatest_y + 1:
+        for dx, dy in [(0, 1), (-1, 1), (1, 1)]:
+            new_coord = (x+dx, y+dy)
+            if new_coord not in solids:
+                queue.append(new_coord)
+                solids.add(new_coord)
+                sand_drops += 1
 
-sand_drops = 0
-while True:
-    sand_drops += 1
-    dx, dy = 500, 0
-
-    while True:
-        if (dx, dy+1) not in solids:
-            dy += 1
-        elif (dx-1, dy+1) not in solids:
-            dx -= 1
-            dy += 1
-        elif (dx+1, dy+1) not in solids:
-            dx += 1
-            dy += 1
-        else:
-            if dx == 500 and dy == 0:
-                print(sand_drops)
-                exit(0)
-            solids.add((dx, dy))
-            break
+print(sand_drops)
